@@ -2,6 +2,7 @@
 
 * Node implementation to store Github stats overtime as opposed to the 14 day default limit from Github.
 * Will also track each day the amount of stars, forks & subscribers so you can track the growth over time.
+* Will automatically run once every 24 hours.
 
 # Prerequisite
 
