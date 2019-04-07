@@ -13,18 +13,19 @@
 
 service: github-stats-storage
 
-# You can pin your service to only deploy with a specific Serverless version
-# Check out our docs for more details
-# frameworkVersion: "=X.X.X"
-
 provider:
   name: aws
   runtime: nodejs8.10
+  memorySize: 128 # optional, in MB, default is 1024
+  timeout: 30 # optional, in seconds, default is 6
   iamRoleStatements:
     - Effect: "Allow"
       Resource: "*"
       Action:
         - "dynamodb:PutItem"
+        - "dynamodb:UpdateItem"
+        - "dynamodb:CreateTable"
+        - "dynamodb:DescribeTable"
 
 # you can overwrite defaults here
   stage: dev

@@ -1,12 +1,17 @@
+Serverless Application to track all of your Github Repository traffic stats for free.
+
 # About
 
 * Node implementation to store Github stats overtime as opposed to the 14 day default limit from Github.
 * Will also track each day the amount of stars, forks & subscribers so you can track the growth over time.
 * Will automatically run once every 24 hours.
+* All runs well within the AWS free tier.
 
 # Prerequisite
 
 - Setup a DynamoDB table with the Primary key "date"
+- Rename `example.env` to `.env`
+- Update .env with your information
 - [Have aws credentials setup locally](https://aws.amazon.com/cli/)
 - Serverless framework installed `npm install -g serverless`
 
