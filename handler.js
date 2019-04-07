@@ -31,6 +31,7 @@ async function main(event, context, callback) {
       const repo_info = yield axios.get(repo["url"]);
 
       const repo_views = yield axios.get(`${repo["url"]}/traffic/views`);
+      const repo_clones = yield axios.get(`${repo["url"]}/traffic/clones`);
 
       for (let j = 0; j < repo_views.data.views.length; j++) {
         const view = repo_views.data.views[j];
@@ -104,6 +105,38 @@ async function main(event, context, callback) {
           );
         }
       }
+
+      for (let j = 0; j < repo_clones.data.clones.length; j += 1) {
+        const clone = repo_clones.data.clones[j];
+        const params = {
+          TableName: table_name,
+          ExpressionAttributeNames: {
+            "#C": "clones",
+            "#UC": "unqiue_clones"
+          },
+          ExpressionAttributeValues: {
+            ":c": {
+              N: clone.count.toString()
+            },
+            ":uc": {
+              N: clone.uniques.toString()
+            }
+          },
+          Key: {
+            repository: {
+              S: repo_info.data.name
+            },
+            date: {
+              S: clone.timestamp
+            }
+          },
+          UpdateExpression: "SET #C = :c, #UC = :uc"
+        };
+
+        yield new Promise((res, rej) =>
+          dynamodb.updateItem(params, err => (err ? rej(err) : res()))
+        );
+      }
     }
     console.log("Done");
     return true;
@@ -123,6 +156,8 @@ async function main(event, context, callback) {
       callback(err);
     });
 }
+
+// main(null);
 
 module.exports = {
   main
